@@ -63,7 +63,7 @@ const ModelCar: React.FC<ModelCarProps> = ({ fetchedCSVData }) => {
     arrangeData();
   }, [fetchedCSVData]);
 
-  console.log({ modelList });
+  console.log({ first2CarData });
 
   return (
     <div className="d-flex text-start gap-4 border-bottom pb-2">
