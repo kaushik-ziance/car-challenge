@@ -41,6 +41,27 @@ const ProgressData: React.FC<ProgressDataProps> = ({
     missingDataPercentage,
   ]);
 
+  const dataTransparency = [
+    {
+      label: "Valid",
+      color: "bg-success",
+      value: valid.length,
+      valueInPercentage: validDataPercentage,
+    },
+    {
+      label: "Mismatched",
+      color: "bg-warning",
+      value: mismatched.length,
+      valueInPercentage: mismatchedDataPercentage,
+    },
+    {
+      label: "Missing",
+      color: "bg-danger",
+      value: missing.length,
+      valueInPercentage: missingDataPercentage,
+    },
+  ];
+
   return (
     <div>
       <Progress multi>
@@ -49,46 +70,23 @@ const ProgressData: React.FC<ProgressDataProps> = ({
         <Progress bar color="danger" value={missingDataPercentage} />
       </Progress>
 
-      <div className="d-flex flex-column mt-2 w-full">
-        {/* Valid */}
-        <div className="d-flex justify-content-between align-items-center w-full">
-          <div className="d-flex align-items-center gap-1">
-            <div>Valid</div>
-            <div className="width-15 height-15 bg-success"></div>
-          </div>
+      {dataTransparency.map((data: any) => {
+        return (
+          <div className="d-flex flex-column mt-2 w-full">
+            <div className="d-flex justify-content-between align-items-center w-full">
+              <div className="d-flex align-items-center gap-1">
+                <div>{data.label}</div>
+                <div className={`width-15 height-15 ${data.color}`}></div>
+              </div>
 
-          <div className="d-flex gap-3 w-full w-25 justify-content-end">
-            <div>{valid.length}</div>
-            <div className="text-muted w-25">{validDataPercentage}%</div>
+              <div className="d-flex gap-3 w-full w-25 justify-content-end">
+                <div>{data.value}</div>
+                <div className="text-muted w-25">{data.valueInPercentage}%</div>
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Mismatched */}
-        <div className="d-flex justify-content-between align-items-center w-full">
-          <div className="d-flex align-items-center gap-1">
-            <div>Mismatched</div>
-            <div className="width-15 height-15 bg-warning"></div>
-          </div>
-
-          <div className="d-flex gap-3 w-full w-25 justify-content-end">
-            <div>{mismatched.length}</div>
-            <div className="text-muted w-25">{mismatchedDataPercentage}%</div>
-          </div>
-        </div>
-
-        {/* Missing */}
-        <div className="d-flex justify-content-between align-items-center  w-full">
-          <div className="d-flex align-items-center gap-1">
-            <div>Missing</div>
-            <div className="width-15 height-15 bg-danger"></div>
-          </div>
-
-          <div className="d-flex gap-3 w-25 justify-content-end">
-            <div>{missing.length}</div>
-            <div className="text-muted w-25">{missingDataPercentage}%</div>
-          </div>
-        </div>
-      </div>
+        );
+      })}
 
       <div className="d-flex flex-column mt-5">
         {/* Unique */}
@@ -101,7 +99,7 @@ const ProgressData: React.FC<ProgressDataProps> = ({
           {fetchedCSVData && (
             <div className="d-flex gap-3 w-25 justify-content-end">
               <div>{unique}</div>
-              <div className="text-muted invisible w-25">4dfdf</div>
+              <div className="text-muted invisible w-25">dummy</div>
             </div>
           )}
         </div>

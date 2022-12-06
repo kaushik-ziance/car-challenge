@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+// components
 import ProgressData from "./ProgressData";
 
 interface MakeCarProps {
@@ -10,6 +11,7 @@ const MakeCar: React.FC<MakeCarProps> = ({ fetchedCSVData }) => {
   const [valid, setValid] = useState([]);
   const [mismatched, setMismatched] = useState([]);
   const [missing, setMissing] = useState([]);
+
   const [first2CarData, setFirst2CarData] = useState<any>([]);
   const [other, setOther] = useState(0);
   const [companyList, setCompanyList] = useState<any>({});
