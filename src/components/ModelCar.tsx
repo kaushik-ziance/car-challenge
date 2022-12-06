@@ -13,13 +13,15 @@ const ModelCar: React.FC<ModelCarProps> = ({ fetchedCSVData }) => {
   const [modelList, setModelList] = useState<any>({});
 
   const arrangeData = () => {
+    // valid , mismatched and missing data
     const missingData: any = [];
     const mismatchedData: any = [];
     const validData: any = [];
+
+    // Car Model List
     const modelListData: any = {};
 
-    // valid , mismatched and missing data
-
+    // Finding CO2 Emissions(g/km) Data is valid
     fetchedCSVData?.map((data: any) => {
       if (data["CO2 Emissions(g/km)"] == undefined || null || "") {
         missingData.push(data["CO2 Emissions(g/km)"]);
@@ -30,14 +32,17 @@ const ModelCar: React.FC<ModelCarProps> = ({ fetchedCSVData }) => {
       }
     });
 
+    // Finding Total Models and their length
     fetchedCSVData?.map((data: any) => {
       const previousValue = modelListData[data["Model"]];
 
       if (previousValue === undefined) {
         // adding key and value
+        // If the value is not exist then create new value
         modelListData[data["Model"]] = 1;
       } else {
         // add the value [length]
+        // If the value is exist then increase their length
         modelListData[data["Model"]] = previousValue + 1;
       }
     });
@@ -48,6 +53,7 @@ const ModelCar: React.FC<ModelCarProps> = ({ fetchedCSVData }) => {
     setModelList(modelListData);
 
     // top2 data
+    // Finding top2 Model's list
 
     if (Object.keys(modelListData).length > 0) {
       const top2: any = Object.entries(modelListData)
@@ -60,10 +66,9 @@ const ModelCar: React.FC<ModelCarProps> = ({ fetchedCSVData }) => {
   };
 
   useEffect(() => {
+    // Arrange the CSV data when the value in dependies changed
     arrangeData();
   }, [fetchedCSVData]);
-
-  console.log({ first2CarData });
 
   return (
     <div className="d-flex text-start gap-4 border-bottom pb-2">

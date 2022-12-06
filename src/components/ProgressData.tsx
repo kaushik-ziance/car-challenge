@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+
 import { Progress } from "reactstrap";
 
 interface ProgressDataProps {
@@ -23,6 +24,7 @@ const ProgressData: React.FC<ProgressDataProps> = ({
   const [missingDataPercentage, setMissingDataPercentage] = useState(0);
 
   const handlePercentageData = () => {
+    // converting given value into percentage
     if (fetchedCSVData) {
       setValidDataPercentage((valid.length / fetchedCSVData.length) * 100);
       setMismatchedDataPercentage(
@@ -33,6 +35,7 @@ const ProgressData: React.FC<ProgressDataProps> = ({
   };
 
   useEffect(() => {
+    // Change the Percentage data when the value in dependies changed
     handlePercentageData();
   }, [
     fetchedCSVData,

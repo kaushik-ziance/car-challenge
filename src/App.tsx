@@ -14,18 +14,17 @@ import VehicleClass from "./components/VehicleClass";
 const App = () => {
   type CSVData = Array<any> | null;
   const initialState: CSVData = null;
-  // fetchedCSVData
   const [fetchedCSVData, setFetchedCSVData] = useState<CSVData>(initialState);
 
   const handleData = () => {
-    // fetching csv data from public folder
+    // Fetching CSV file from Public folder :
+
     if (!fetchedCSVData) {
       fetch(`/data/data.csv`)
         .then((res) => res.text())
         .then((res) => {
           const csv: any = res;
-
-          // convert csv to json
+          // Converting CSV file into JSON with Papaparse
           Papa.parse(csv, {
             header: true,
             skipEmptyLines: true,
@@ -38,12 +37,14 @@ const App = () => {
   };
 
   useEffect(() => {
-    // calling first when the app is mounting
+    // Fetching CSV Data first when the app is mounting
+    // This file is mounted first
     handleData();
   }, []);
 
   return (
     <div className="d-flex flex-column gap-3 justify-content-center height-90">
+      {/* Pass fetchedCSVData into subcomponent  */}
       <MakeCar fetchedCSVData={fetchedCSVData} />
       <ModelCar fetchedCSVData={fetchedCSVData} />
       <VehicleClass fetchedCSVData={fetchedCSVData} />

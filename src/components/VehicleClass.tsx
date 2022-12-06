@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+
+// components
 import ProgressData from "./ProgressData";
 
 interface VehicleClassProps {
@@ -9,16 +11,22 @@ const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
   const [valid, setValid] = useState([]);
   const [mismatched, setMismatched] = useState([]);
   const [missing, setMissing] = useState([]);
+
   const [first2CarData, setFirst2CarData] = useState<any>([]);
   const [other, setOther] = useState(0);
   const [vehicleClassList, setVehicleClassList] = useState<any>({});
 
   const arrangeData = () => {
+    // valid , mismatched and missing data
+
     const missingData: any = [];
     const mismatchedData: any = [];
     const validData: any = [];
+
+    // Vehicle Class List
     const vehicleClassListData: any = {};
 
+    // Finding CO2 Emissions(g/km) Data is valid
     fetchedCSVData?.map((data: any) => {
       if (data["CO2 Emissions(g/km)"] == undefined || null || "") {
         missingData.push(data["CO2 Emissions(g/km)"]);
@@ -29,12 +37,17 @@ const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
       }
     });
 
+    // Finding Vehicle Class and their length
     fetchedCSVData?.map((data: any) => {
       const previousValue = vehicleClassListData[data["Vehicle Class"]];
 
       if (previousValue === undefined) {
+        // adding key and value
+        // If the value is not exist then create new value
         vehicleClassListData[data["Vehicle Class"]] = 1;
       } else {
+        // add the value [length]
+        // If the value is exist then increase their length
         vehicleClassListData[data["Vehicle Class"]] = previousValue + 1;
       }
     });
@@ -45,6 +58,7 @@ const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
     setVehicleClassList(vehicleClassListData);
 
     // top2 data
+    // Finding Vehicle Class list
 
     if (Object.keys(vehicleClassListData).length > 0) {
       const top2: any = Object.entries(vehicleClassListData)
@@ -61,6 +75,7 @@ const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
   };
 
   useEffect(() => {
+    // Arrange the CSV data when the value in dependies changed
     arrangeData();
   }, [fetchedCSVData]);
 
