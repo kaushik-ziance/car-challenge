@@ -1,41 +1,21 @@
 import React, { useEffect, useState } from "react";
+import LeftSideComponent from "./leftsidecomponent/LeftSideComponent";
 
 // components
-import ProgressData from "./ProgressData";
+import ProgressData from "./rightsidecomponent/ProgressData";
 
 interface VehicleClassProps {
   fetchedCSVData: any;
 }
 
 const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
-  const [valid, setValid] = useState([]);
-  const [mismatched, setMismatched] = useState([]);
-  const [missing, setMissing] = useState([]);
-
   const [first2CarData, setFirst2CarData] = useState<any>([]);
   const [other, setOther] = useState(0);
   const [vehicleClassList, setVehicleClassList] = useState<any>({});
 
   const arrangeData = () => {
-    // valid , mismatched and missing data
-
-    const missingData: any = [];
-    const mismatchedData: any = [];
-    const validData: any = [];
-
     // Vehicle Class List
     const vehicleClassListData: any = {};
-
-    // Finding CO2 Emissions(g/km) Data is valid
-    fetchedCSVData?.map((data: any) => {
-      if (data["CO2 Emissions(g/km)"] == undefined || null || "") {
-        missingData.push(data["CO2 Emissions(g/km)"]);
-      } else if (typeof data["CO2 Emissions(g/km)"] != "string") {
-        mismatchedData.push(data["CO2 Emissions(g/km)"]);
-      } else {
-        validData.push(data["CO2 Emissions(g/km)"]);
-      }
-    });
 
     // Finding Vehicle Class and their length
     fetchedCSVData?.map((data: any) => {
@@ -52,9 +32,6 @@ const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
       }
     });
 
-    setValid(validData);
-    setMismatched(mismatchedData);
-    setMissing(missingData);
     setVehicleClassList(vehicleClassListData);
 
     // top2 data
@@ -81,58 +58,21 @@ const VehicleClass: React.FC<VehicleClassProps> = ({ fetchedCSVData }) => {
 
   return (
     <div className="d-flex text-start gap-4 border-bottom pb-2">
-      <div className="d-flex flex-1 flex-column">
-        <div>
-          <div className="fw-bold">A. Vehicle Class</div>
-          <div>
-            class of vehicle depending on their utility, capacity and weight
-          </div>
-        </div>
-        <div className="d-flex flex-column gap-3">
-          {fetchedCSVData && first2CarData && (
-            <div className="d-flex w-full justify-content-between">
-              <div>{first2CarData[0]?.label}</div>
-              <div className="fw-bold text-primary">
-                {(
-                  (first2CarData[0]?.value * 100) /
-                  fetchedCSVData.length
-                ).toFixed(2)}
-                %
-              </div>
-            </div>
-          )}
-
-          {fetchedCSVData && first2CarData && (
-            <div className="d-flex w-full justify-content-between">
-              <div>{first2CarData[1]?.label}</div>
-              <div className="fw-bold text-primary">
-                {(
-                  (first2CarData[1]?.value * 100) /
-                  fetchedCSVData.length
-                ).toFixed(2)}
-                %
-              </div>
-            </div>
-          )}
-
-          <div className="d-flex justify-content-between text-muted fs-6">
-            <div>Other({Object.keys(vehicleClassList).length - 2})</div>
-            <div>
-              {fetchedCSVData &&
-                other &&
-                ((other / fetchedCSVData.length) * 100).toFixed(2)}
-              %
-            </div>
-          </div>
-        </div>
-      </div>
+      <LeftSideComponent
+        fetchedCSVData={fetchedCSVData}
+        first2CarData={first2CarData}
+        dataList={vehicleClassList}
+        other={other}
+        heading={"C. Vehicle Class"}
+        description={
+          "class of vehicle depending on their utility, capacity and weight"
+        }
+        type={0}
+      />
 
       <div className="flex-2">
         <ProgressData
           fetchedCSVData={fetchedCSVData}
-          valid={valid}
-          mismatched={mismatched}
-          missing={missing}
           first2CarData={first2CarData}
           unique={Object.keys(vehicleClassList).length}
         />

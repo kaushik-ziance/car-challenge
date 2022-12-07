@@ -4,21 +4,46 @@ import { Progress } from "reactstrap";
 
 interface ProgressDataProps {
   fetchedCSVData: any;
-  valid: any;
-  mismatched: any;
-  missing: any;
+
   first2CarData: any;
   unique: number;
 }
 
 const ProgressData: React.FC<ProgressDataProps> = ({
   fetchedCSVData,
-  valid,
-  mismatched,
-  missing,
+
   first2CarData,
   unique,
 }) => {
+  const [valid, setValid] = useState([]);
+  const [mismatched, setMismatched] = useState([]);
+  const [missing, setMissing] = useState([]);
+
+  const isDataValid = () => {
+    // valid , mismatched and missing data
+
+    const missingData: any = [];
+    const mismatchedData: any = [];
+    const validData: any = [];
+
+    // Finding CO2 Emissions(g/km) Data is valid
+    fetchedCSVData?.map((data: any) => {
+      if (data["CO2 Emissions(g/km)"] == undefined || null || "") {
+        missingData.push(data);
+      } else if (typeof data["CO2 Emissions(g/km)"] != "string") {
+        mismatchedData.push(data);
+      } else {
+        validData.push(data["CO2 Emissions(g/km)"]);
+      }
+    });
+
+    setValid(validData);
+    setMismatched(mismatchedData);
+    setMissing(missingData);
+
+    handlePercentageData();
+  };
+
   const [validDataPercentage, setValidDataPercentage] = useState(0);
   const [mismatchedDataPercentage, setMismatchedDataPercentage] = useState(0);
   const [missingDataPercentage, setMissingDataPercentage] = useState(0);
@@ -35,8 +60,8 @@ const ProgressData: React.FC<ProgressDataProps> = ({
   };
 
   useEffect(() => {
+    isDataValid();
     // Change the Percentage data when the value in dependies changed
-    handlePercentageData();
   }, [
     fetchedCSVData,
     validDataPercentage,

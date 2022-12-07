@@ -1,41 +1,21 @@
 import React, { useEffect, useState } from "react";
+import LeftSideComponent from "./leftsidecomponent/LeftSideComponent";
 
 // components
-import ProgressData from "./ProgressData";
+import ProgressData from "./rightsidecomponent/ProgressData";
 
 interface MakeCarProps {
   fetchedCSVData: any;
 }
 
 const MakeCar: React.FC<MakeCarProps> = ({ fetchedCSVData }) => {
-  const [valid, setValid] = useState([]);
-  const [mismatched, setMismatched] = useState([]);
-  const [missing, setMissing] = useState([]);
-
   const [first2CarData, setFirst2CarData] = useState<any>([]);
   const [other, setOther] = useState(0);
   const [companyList, setCompanyList] = useState<any>({});
 
   const arrangeData = () => {
-    // valid , mismatched and missing data
-
-    const missingData: any = [];
-    const mismatchedData: any = [];
-    const validData: any = [];
-
     // Car Company List
     const companyListData: any = {};
-
-    // Finding CO2 Emissions(g/km) Data is valid
-    fetchedCSVData?.map((data: any) => {
-      if (data["CO2 Emissions(g/km)"] == undefined || null || "") {
-        missingData.push(data);
-      } else if (typeof data["CO2 Emissions(g/km)"] != "string") {
-        mismatchedData.push(data);
-      } else {
-        validData.push(data["CO2 Emissions(g/km)"]);
-      }
-    });
 
     // Finding Total Companies and their length
     fetchedCSVData?.map((data: any) => {
@@ -52,12 +32,8 @@ const MakeCar: React.FC<MakeCarProps> = ({ fetchedCSVData }) => {
       }
     });
 
-    setValid(validData);
-    setMismatched(mismatchedData);
-    setMissing(missingData);
     setCompanyList(companyListData);
 
-    // top2 data
     // Finding top2 Compnay's list
 
     if (Object.keys(companyListData).length > 0) {
@@ -81,56 +57,19 @@ const MakeCar: React.FC<MakeCarProps> = ({ fetchedCSVData }) => {
 
   return (
     <div className="d-flex text-start gap-4 border-bottom pb-2">
-      <div className="d-flex flex-1 flex-column">
-        <div>
-          <div className="fw-bold">A. Make</div>
-          <div>Compnay of the vehicle</div>
-        </div>
-        <div className="d-flex flex-column gap-3">
-          {fetchedCSVData && first2CarData && (
-            <div className="d-flex w-full justify-content-between">
-              <div>{first2CarData[0]?.label}</div>
-              <div className="fw-bold text-primary">
-                {(
-                  (first2CarData[0]?.value * 100) /
-                  fetchedCSVData.length
-                ).toFixed(2)}
-                %
-              </div>
-            </div>
-          )}
-
-          {fetchedCSVData && first2CarData && (
-            <div className="d-flex w-full justify-content-between">
-              <div>{first2CarData[1]?.label}</div>
-              <div className="fw-bold text-primary">
-                {(
-                  (first2CarData[1]?.value * 100) /
-                  fetchedCSVData.length
-                ).toFixed(2)}
-                %
-              </div>
-            </div>
-          )}
-
-          <div className="d-flex justify-content-between text-muted fs-6">
-            <div>Other({Object.keys(companyList).length - 2})</div>
-            <div>
-              {fetchedCSVData &&
-                other &&
-                ((other * 100) / fetchedCSVData.length).toFixed(2)}
-              %
-            </div>
-          </div>
-        </div>
-      </div>
+      <LeftSideComponent
+        fetchedCSVData={fetchedCSVData}
+        first2CarData={first2CarData}
+        dataList={companyList}
+        other={other}
+        heading={"A. Make"}
+        description={"Compnay of the vehicle"}
+        type={0}
+      />
 
       <div className="flex-2">
         <ProgressData
           fetchedCSVData={fetchedCSVData}
-          valid={valid}
-          mismatched={mismatched}
-          missing={missing}
           first2CarData={first2CarData}
           unique={Object.keys(companyList).length}
         />
