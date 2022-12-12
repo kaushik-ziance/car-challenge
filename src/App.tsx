@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import Papa from "papaparse";
+import axios from 'axios';
 
 // css
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -20,16 +21,15 @@ const App = () => {
     // Fetching CSV file from Public folder :
 
     if (!fetchedCSVData) {
-      fetch(`/data/data.csv`)
-        .then((res) => res.text())
-        .then((res) => {
-          const csv: any = res;
-          // Converting CSV file into JSON with Papaparse
+      axios.get(`/data/data.csv`)
+        .then((res) => {                        
+          const csv: any = (res.data);
+
           Papa.parse(csv, {
             header: true,
             skipEmptyLines: true,
-            complete: function (results: any) {
-              setFetchedCSVData(results.data);
+            complete: function (results: any) {              
+              setFetchedCSVData((results.data));
             },
           });
         });
